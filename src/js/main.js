@@ -13,13 +13,18 @@ const addEventListeners = (UpButton, downButton, lift) => {
     UpButton?.addEventListener(`click`, () => {
       const departureFloorIndex =
         +lift.parentElement.parentElement.id.split(`-`)[1];
-      lift.parentElement.removeChild(
-        Array.from(lift.parentElement.children).filter(
-          (child, index) => index === departureFloorIndex
-        )[0]
+      const currentLift = Array.from(lift.parentElement.children).filter(
+        (child, index) => index === departureFloorIndex
+      )[0];
+      setTimeout(() => {
+        lift.parentElement.removeChild(currentLift);
+      }, 1000);
+      Array.from(FLOORS[departureFloorIndex + 1].children).find(
+        (child) => {
+          console.log(`child `, child);
+          return false
+        }
       );
-Array.from(FLOORS[departureFloorIndex+1].children).find(child => child)
-
 
       // lift.parentElement.replaceChildren(newLifts);
 
