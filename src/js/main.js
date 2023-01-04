@@ -8,6 +8,12 @@ const FLOORS = [];
 const NUMBER_OF_LIFTS = 4;
 const NUMBER_OF_FLOORS = 4;
 
+const getFirstAvailableLiftOnTheFloor = (floor) => {
+  return Array.from(floor.children).find(
+    (child) => child.className === `wrapper-lift`
+  )?.children[0];
+};
+
 const addEventListeners = (UpButton, downButton, lift) => {
   try {
     UpButton?.addEventListener(`click`, () => {
@@ -18,13 +24,15 @@ const addEventListeners = (UpButton, downButton, lift) => {
       )[0];
       setTimeout(() => {
         lift.parentElement.removeChild(currentLift);
-      }, 1000);
-      Array.from(FLOORS[departureFloorIndex + 1].children).find(
-        (child) => {
+        const result = Array.from(
+          FLOORS[departureFloorIndex + 1].children
+        ).find((child) => {
           console.log(`child `, child);
-          return false
-        }
-      );
+          return child.classList.contains(`wrapper-lift`);
+          // return false;
+        });
+        result.appendChild(currentLift);
+      }, 1000);
 
       // lift.parentElement.replaceChildren(newLifts);
 
@@ -82,34 +90,31 @@ const addNewFloor = (floorNumber) => {
   wrapperContent.classList.add(`wrapper-content`);
   const content = document.createElement(`p`);
   content.classList.add(`content`);
-  content.innerText = floorNumber > 0 ? `floor ${floorNumber}` : `Ground Floor`;
-
+  content.innerText = `floor ${floorNumber}`;
   floor.appendChild(wrapperButtonGroup);
+  const wrapperLift = document.createElement(`div`);
+  wrapperLift.classList.add(`wrapper-lift`);
   if (floorNumber === 0) {
-    constructLifts(floor);
+    constructLifts(wrapperLift);
   }
+  floor.appendChild(wrapperLift);
   floor.appendChild(wrapperContent);
   wrapperContent.appendChild(content);
 
-  const firstLift = Array.from(floor.children).find(
-    (child) => child.className === `wrapper-lift`
-  )?.children[0];
+  const firstAvailable = getFirstAvailableLiftOnTheFloor(floor);
 
-  addEventListeners(upBtn, downBtn, firstLift);
+  addEventListeners(upBtn, downBtn, firstAvailable);
 
   floor.classList.add(`wrapper`);
   FLOORS.push(floor);
 };
 
-const constructLifts = (floor) => {
-  const wrapperLift = document.createElement(`div`);
-  wrapperLift.classList.add(`wrapper-lift`);
+const constructLifts = (wrapperLift) => {
   for (let i = 0; i < NUMBER_OF_LIFTS; i++) {
     const lift = document.createElement(`div`);
     lift.classList.add(`lift`);
     wrapperLift.appendChild(lift);
   }
-  floor.appendChild(wrapperLift);
 };
 
 const renderFloors = () => {
