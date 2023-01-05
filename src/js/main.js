@@ -27,17 +27,18 @@ const addEventListeners = (UpButton, downButton, lift) => {
         const result = Array.from(
           FLOORS[departureFloorIndex + 1].children
         ).find((child) => {
-          console.log(`child `, child);
+          
           return child.classList.contains(`wrapper-lift`);
           // return false;
         });
+       
         result.appendChild(currentLift);
       }, 1000);
 
       // lift.parentElement.replaceChildren(newLifts);
 
       const floor = document.querySelector(`.wrapper`);
-      console.log(`clocked`, floor.id);
+      
       const totalDistanceRequiredToBeUplifted =
         floor.clientHeight + parseInt(getComputedStyle(floor).marginTop);
       lift.style.transform = `translateY(-${totalDistanceRequiredToBeUplifted}px)`;
